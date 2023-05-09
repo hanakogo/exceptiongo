@@ -14,7 +14,10 @@ func (e *ExceptionHandler) Handle(ex *etype.Exception) {
 }
 
 func (e *ExceptionHandler) GlobalHandle() {
-	exutil.HandleRecoverException(func(exception *etype.Exception) {
+	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
 		e.OnHandle(exception)
 	})
+	if r := recover(); r != nil {
+		panic(r)
+	}
 }
