@@ -41,6 +41,8 @@ func TestException(t *testing.T) {
 	case ohanakoutilgo.TypeOf[Common]():
 		fmt.Println("exception has been detected")
 	}
+
+	ex.PrintStackTrace()
 }
 
 func TestExceptionHandler(t *testing.T) {
