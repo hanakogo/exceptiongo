@@ -61,6 +61,6 @@ func TestExceptionHandler(t *testing.T) {
 	handler.Handle(commonException)
 	handler.Handle(standardException)
 
-	defer GlobalHandler.GlobalHandle()
+	defer GlobalHandler.Deploy()
 	exceptiongo.Throw(mustThrowException)
 }

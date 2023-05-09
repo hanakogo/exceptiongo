@@ -9,15 +9,15 @@ type ExceptionHandler struct {
 	OnHandle func(*etype.Exception)
 }
 
-func (e *ExceptionHandler) Handle(ex *etype.Exception) {
-	e.OnHandle(ex)
-}
-
-func (e *ExceptionHandler) GlobalHandle() {
+func (e *ExceptionHandler) Deploy() {
 	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
 		e.OnHandle(exception)
 	})
 	if r := recover(); r != nil {
 		panic(r)
 	}
+}
+
+func (e *ExceptionHandler) Handle(ex *etype.Exception) {
+	e.OnHandle(ex)
 }
