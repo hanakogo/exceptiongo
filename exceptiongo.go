@@ -39,7 +39,7 @@ func NewExceptionF[T any](format string, a ...any) *etype.Exception {
 }
 
 func NewException[T any](message string) *etype.Exception {
-	return NewExceptionF[T](message)
+	return etype.InternalException[T](fmt.Errorf(message))
 }
 
 func ToException[T any](err error) *etype.Exception {
