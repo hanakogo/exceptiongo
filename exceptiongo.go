@@ -14,7 +14,7 @@ func Throw(exception *etype.Exception) {
 }
 
 func TryHandle[T any](do func()) {
-	exutil.HandleRecoverException(func(exception *etype.Exception) {
+	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
 		switch {
 		case exception.Compare(ohanakoutilgo.TypeOf[T]()):
 			do()
@@ -22,6 +22,9 @@ func TryHandle[T any](do func()) {
 			Throw(exception)
 		}
 	})
+	if r := recover(); r != nil {
+		panic(r)
+	}
 }
 
 func NewExceptionF[T any](format string, a ...any) *etype.Exception {
