@@ -13,6 +13,14 @@ func Throw(exception *etype.Exception) {
 	_exutil.InternalThrow(exception)
 }
 
+func QuickThrow[T any](err error) {
+	if err == nil {
+		return
+	}
+	exception := etype.InternalException[T](err)
+	Throw(exception)
+}
+
 func TryHandle[T any](do func(exception *etype.Exception)) {
 	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
 		switch {
