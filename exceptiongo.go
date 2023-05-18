@@ -21,6 +21,11 @@ func QuickThrow[T any](err error) {
 	Throw(exception)
 }
 
+func QuickThrowMsg[T any](msg string) {
+	exception := etype.InternalException[T](fmt.Errorf(msg))
+	Throw(exception)
+}
+
 func TryHandle[T any](do func(exception *etype.Exception)) {
 	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
 		switch {
