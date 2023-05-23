@@ -40,20 +40,23 @@ func (e *Exception) Compare(p reflect.Type) bool {
 	return e.Type() == p
 }
 
-func (e *Exception) PrintStackTrace() {
+func (e *Exception) GetStackTraceMessage() string {
 	parseOutputStackTrace := func() (output string) {
 		for _, s := range e.stackTrace {
 			output += fmt.Sprintf("\t -> at %s\n", s)
 		}
 		return
 	}
-	_, err := fmt.Fprintf(
-		os.Stderr,
+	return fmt.Sprintf(
 		"Exception[%s] encountered: %s\n%s",
 		e.TypeName(),
 		e.Error(),
 		parseOutputStackTrace(),
 	)
+}
+
+func (e *Exception) PrintStackTrace() {
+	_, err := fmt.Fprint(os.Stderr, e.GetStackTraceMessage())
 	if err != nil {
 		panic(err)
 	}
