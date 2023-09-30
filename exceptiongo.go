@@ -26,18 +26,16 @@ func QuickThrowMsg[T any](msg string) {
 	Throw(exception)
 }
 
-func TryHandle[T any](do func(exception *etype.Exception)) {
+func TryCatch[T any](try func(), catch func(exception *etype.Exception)) {
 	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
 		switch {
 		case exception.Compare(ohanakoutilgo.TypeOf[T]()):
-			do(exception)
+			catch(exception)
 		default:
 			Throw(exception)
 		}
 	})
-	if r := recover(); r != nil {
-		panic(r)
-	}
+	try()
 }
 
 func NewExceptionF[T any](format string, a ...any) *etype.Exception {

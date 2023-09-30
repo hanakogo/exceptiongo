@@ -64,3 +64,12 @@ func TestExceptionHandler(t *testing.T) {
 	defer GlobalHandler.Deploy()
 	exceptiongo.Throw(mustThrowException)
 }
+
+func TestTryCatch(t *testing.T) {
+	commonException := exceptiongo.NewExceptionF[Common]("test common error")
+	exceptiongo.TryCatch[Common](func() {
+		exceptiongo.Throw(commonException)
+	}, func(exception *etype.Exception) {
+		t.Log(exception.GetStackTraceMessage())
+	})
+}
