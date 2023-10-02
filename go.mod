@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/gookit/slog v0.5.4
-	github.com/ohanakogo/ohanakoutilgo v0.0.3
+	github.com/ohanakogo/ohanakoutilgo v0.0.4-beta1
 )
 
 require (
