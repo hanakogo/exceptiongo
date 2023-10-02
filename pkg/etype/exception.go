@@ -31,7 +31,7 @@ func InternalException[T any](err error) *Exception {
 	}
 	return &Exception{
 		error:      err,
-		kind:       ohanakoutilgo.TypeOf[T](),
+		kind:       ohanakoutilgo.TypeOf[T]().Elem(),
 		stackTrace: getStackTrace(),
 	}
 }
@@ -70,5 +70,5 @@ func (e *Exception) Type() reflect.Type {
 }
 
 func (e *Exception) TypeName() string {
-	return e.Type().String()[1:]
+	return e.Type().String()
 }
