@@ -67,9 +67,17 @@ func TestExceptionHandler(t *testing.T) {
 
 func TestTryCatch(t *testing.T) {
 	commonException := exceptiongo.NewExceptionF[Common]("test common error")
+
 	exceptiongo.TryCatch[Common](func() {
 		exceptiongo.Throw(commonException)
 	}, func(exception *etype.Exception) {
+		t.Log(exception.GetStackTraceMessage())
+	})
+
+	exceptiongo.TryCatch[any](func() {
+		exceptiongo.Throw(commonException)
+	}, func(exception *etype.Exception) {
+		t.Logf("the type of [%v] has been catched by the type of [any] catcher!", exception.Type())
 		t.Log(exception.GetStackTraceMessage())
 	})
 }

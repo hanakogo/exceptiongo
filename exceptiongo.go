@@ -7,6 +7,7 @@ import (
 	"github.com/ohanakogo/exceptiongo/pkg/etype"
 	"github.com/ohanakogo/exceptiongo/pkg/exutil"
 	"github.com/ohanakogo/ohanakoutilgo"
+	"reflect"
 )
 
 func Throw(exception *etype.Exception) {
@@ -28,8 +29,11 @@ func QuickThrowMsg[T any](msg string) {
 
 func TryCatch[T any](try func(), catch func(exception *etype.Exception)) {
 	defer exutil.HandleRecoverException(func(exception *etype.Exception) {
+		exType := exception.Type()
 		switch {
-		case exception.Compare(ohanakoutilgo.TypeOf[T]()):
+		case exType == ohanakoutilgo.TypeOf[T]():
+			catch(exception)
+		case ohanakoutilgo.TypeOf[T]().Elem().Kind() == reflect.Interface:
 			catch(exception)
 		default:
 			Throw(exception)
