@@ -69,6 +69,10 @@ func (e *Exception) Type() reflect.Type {
 	return e.kind
 }
 
+func (e *Exception) Error() error {
+	return e.error
+}
+
 func (e *Exception) TypeName() string {
 	return e.Type().String()
 }
