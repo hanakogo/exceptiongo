@@ -1,8 +1,8 @@
-package etype
+package exceptiongo
 
 import (
 	"fmt"
-	"github.com/ohanakogo/ohanakoutilgo"
+	"github.com/hanakogo/hanakoutilgo"
 	"os"
 	"reflect"
 	"runtime"
@@ -11,11 +11,33 @@ import (
 
 type Exception struct {
 	error
-	kind       reflect.Type
+	exType     reflect.Type
 	stackTrace []string
 }
 
-func InternalException[T any](err error) *Exception {
+func NewExceptionF[T any](format string, a ...any) *Exception {
+	var err error
+	switch len(a) {
+	case 0:
+		err = fmt.Errorf(format)
+	default:
+		err = fmt.Errorf(format, a)
+	}
+	return iNewException[T](err)
+}
+
+func NewException[T any](message string) *Exception {
+	return iNewException[T](fmt.Errorf(message))
+}
+
+func NewErrException[T any](err error) *Exception {
+	if err == nil {
+		return nil
+	}
+	return iNewException[T](err)
+}
+
+func iNewException[T any](err error) *Exception {
 	getStackTrace := func() (stackTrace []string) {
 		for i := 3; ; i++ {
 			pc, file, line, ok := runtime.Caller(i)
@@ -29,15 +51,15 @@ func InternalException[T any](err error) *Exception {
 		}
 		return
 	}
+	exType := hanakoutilgo.TypeOf[T]()
+	if exType.Kind() == reflect.Ptr {
+		exType = exType.Elem()
+	}
 	return &Exception{
 		error:      err,
-		kind:       ohanakoutilgo.TypeOf[T]().Elem(),
+		exType:     exType,
 		stackTrace: getStackTrace(),
 	}
-}
-
-func (e *Exception) Compare(p reflect.Type) bool {
-	return e.Type() == p
 }
 
 func (e *Exception) GetStackTraceMessage() string {
@@ -66,7 +88,7 @@ func (e *Exception) Type() reflect.Type {
 	if e == nil {
 		return nil
 	}
-	return e.kind
+	return e.exType
 }
 
 func (e *Exception) Error() error {
