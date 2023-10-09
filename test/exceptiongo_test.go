@@ -20,14 +20,13 @@ func init() {
 	GlobalHandler.OnHandle = func(e *exceptiongo.Exception) {
 		switch e.Type() {
 		case hanakoutilgo.ActualTypeOf[Common]():
-			fmt.Println("catching a common e:", e)
+			fmt.Println("catching a common e:", e.GetStackTraceMessage())
 
 		case hanakoutilgo.ActualTypeOf[Standard]():
-			fmt.Println("catching a standard e:", e)
+			fmt.Println("catching a standard e:", e.GetStackTraceMessage())
 
 		case hanakoutilgo.ActualTypeOf[MustThrow]():
-			fmt.Println("catching a must throw e:", e)
-			fmt.Println("simulated throw:", e.GetStackTraceMessage())
+			fmt.Println("catching a must throw e and simulated throw:", e.GetStackTraceMessage())
 		}
 	}
 }
@@ -53,11 +52,15 @@ func TestExceptionHandler(t *testing.T) {
 		case hanakoutilgo.ActualTypeOf[MustThrow]():
 			exceptiongo.Throw(e)
 		default:
-			fmt.Printf("normally handle exception: %v\n", e)
+			fmt.Printf("normally handle exception: %s", e.GetStackTraceMessage())
 		}
 	})
-	handler.Handle(commonException)
-	handler.Handle(standardException)
+	handler.Handle(func() {
+		exceptiongo.Throw(commonException)
+	})
+	handler.Handle(func() {
+		exceptiongo.Throw(standardException)
+	})
 
 	defer GlobalHandler.Deploy()
 	exceptiongo.Throw(mustThrowException)

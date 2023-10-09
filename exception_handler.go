@@ -25,6 +25,7 @@ func (e *ExceptionHandler) Deploy() {
 	}
 }
 
-func (e *ExceptionHandler) Handle(ex *Exception) {
-	e.OnHandle(ex)
+func (e *ExceptionHandler) Handle(fun func()) {
+	defer e.Deploy()
+	fun()
 }
