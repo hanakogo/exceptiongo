@@ -6,7 +6,7 @@ func Throw(exception *Exception) {
 	iThrow(exception)
 }
 
-func QuickThrow[T any](err error) {
+func ThrowErr[T any](err error) {
 	if err == nil {
 		return
 	}
@@ -14,8 +14,13 @@ func QuickThrow[T any](err error) {
 	Throw(exception)
 }
 
-func QuickThrowMsg[T any](msg string) {
+func ThrowMsg[T any](msg string) {
 	exception := iNewException[T](fmt.Errorf(msg))
+	Throw(exception)
+}
+
+func ThrowMsgF[T any](format string, args any) {
+	exception := iNewException[T](fmt.Errorf(format, args))
 	Throw(exception)
 }
 
