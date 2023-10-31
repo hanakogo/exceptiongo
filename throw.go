@@ -19,7 +19,7 @@ func ThrowMsg[T any](msg string) {
 	Throw(exception)
 }
 
-func ThrowMsgF[T any](format string, args any) {
+func ThrowMsgF[T any](format string, args ...any) {
 	exception := iNewException[T](fmt.Errorf(format, args))
 	Throw(exception)
 }
