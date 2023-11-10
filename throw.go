@@ -20,7 +20,13 @@ func ThrowMsg[T any](msg string) {
 }
 
 func ThrowMsgF[T any](format string, args ...any) {
-	exception := iNewException[T](fmt.Errorf(format, args))
+	var err error
+	if len(args) > 0 {
+		err = fmt.Errorf(format, args...)
+	} else {
+		err = fmt.Errorf(format)
+	}
+	exception := iNewException[T](err)
 	Throw(exception)
 }
 
