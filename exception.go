@@ -49,6 +49,8 @@ func iNewException[T any](err error) *Exception {
 			fileName := filePath[len(filePath)-1]
 			stackTrace = append(stackTrace, fmt.Sprintf("%s <%s:%d>", funcName, fileName, line))
 		}
+		// hardcode pop last 2 elements to remove common basic level stacktrace
+		stackTrace = stackTrace[:len(stackTrace)-2]
 		return
 	}
 	exType := hanakoutilgo.TypeOf[T]()
